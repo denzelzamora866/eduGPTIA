@@ -1,8 +1,16 @@
-class EduGPT:
+class eduGPTIA:
 
     def __init__(self):
         self.name = "EduGPTIA"
         self.version = "0.0.2"
+        
+        
+        self.vocabulary = set()
+        self.total_words = 0
+
+    def train(self, trainer):
+        trainer.train()
+
 
     def show_information(self):
         print()
