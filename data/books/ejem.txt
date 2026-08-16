@@ -1,0 +1,8 @@
+Los perros son animales domésticos.
+Los gatos son animales domésticos.
+Los animales necesitan alimento y agua.
+Python es un lenguaje de programación.
+La programación permite crear aplicaciones.
+La inteligencia artificial utiliza modelos matemáticos.
+Los perros y los gatos pueden ser mascotas.
+La programación se utiliza para desarrollar software.

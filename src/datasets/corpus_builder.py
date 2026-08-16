@@ -1,80 +1,94 @@
 from pathlib import Path
 
+
 BASE_DIR = Path(__file__).resolve().parents[2]
 
 
 class CorpusBuilder:
 
     def __init__(self):
-        self.books_path = BASE_DIR / "data" / "books"
-        self.processed_path = BASE_DIR / "data" / "processed"
-        self.corpus_path = self.processed_path / "corpus.txt"
 
-    def find_books(self):
-        """
-        Busca todos los archivos de texto
-        dentro de la carpeta books.
-        """
-        books = list(self.books_path.glob("*.txt"))
-        return books
+        self.books_path = (
+            BASE_DIR / "data" / "books"
+        )
 
-    def read_books(self, books):
-        """
-        Lee todos los libros encontrados y
-        devuelve un único texto.
-        """
-        corpus = ""
-        print("\nLeyendo libros...\n")
-
-        for book in books:
-            print(f" > Leyendo: {book.name}")
-            with open(book, "r", encoding="utf-8") as file:
-                corpus += file.read()
-                corpus += "\n"
-
-        return corpus
-
-    def save_corpus(self, corpus):
-        """
-        Guarda el corpus procesado.
-        """
-        self.processed_path.mkdir(exist_ok=True)
-
-        with open(self.corpus_path, "w", encoding="utf-8") as file:
-            file.write(corpus)
-
-    def show_corpus_information(self, books, corpus):
-        total_books = len(books)
-        total_characters = len(corpus)
-        total_lines = len(corpus.splitlines())
-        total_words = len(corpus.split())
-
-        print("Corpus construido exitosamente.")
-        print(f"Libros procesados..... {total_books}")
-        print(f"Caracteres............ {total_characters}")
-        print(f"Líneas................ {total_lines}")
-        print(f"Palabras.............. {total_words}")
-        print()
-        print(f"Archivo generado...... {self.corpus_path}")
+        self.processed_path = (
+            BASE_DIR
+            / "data"
+            / "processed"
+            / "corpus.txt"
+        )
 
     def build_corpus(self):
-        books = self.find_books()
 
-        print("\n********** CONSTRUCCIÓN DEL CORPUS **********")
+        self.books_path.mkdir(
+            parents=True,
+            exist_ok=True
+        )
 
-        if not books:
-            print("\nNo se encontraron libros.")
-            return
+        self.processed_path.parent.mkdir(
+            parents=True,
+            exist_ok=True
+        )
 
-        print("\nLibros encontrados:\n")
+        texts = []
 
-        for book in books:
-            print(f"✓ {book.name}")
+        for file_path in self.books_path.glob("*.txt"):
 
-        corpus = self.read_books(books)
-        self.save_corpus(corpus)
-        self.show_corpus_information(books, corpus)
+            with open(
+                file_path,
+                "r",
+                encoding="utf-8"
+            ) as file:
+
+                texts.append(file.read())
+
+        corpus = "\n".join(texts)
+
+        with open(
+            self.processed_path,
+            "w",
+            encoding="utf-8"
+        ) as file:
+
+            file.write(corpus)
+
+        print()
+        print("=" * 45)
+        print("          CORPUS CONSTRUIDO")
+        print("=" * 45)
+
+        print(
+            f"Archivos encontrados: {len(texts)}"
+        )
+
+        print(
+            f"Caracteres: {len(corpus)}"
+        )
+
+        print()
+        print("Corpus guardado en:")
+
+        print(self.processed_path)
 
     def load_corpus(self):
-        with open(self.corpus_path, "r", encoding="utf-8") as file:
+
+        if not self.processed_path.exists():
+
+            print(
+                "El corpus todavía no existe."
+            )
+
+            print(
+                "Construyendo corpus..."
+            )
+
+            self.build_corpus()
+
+        with open(
+            self.processed_path,
+            "r",
+            encoding="utf-8"
+        ) as file:
+
             return file.read()
